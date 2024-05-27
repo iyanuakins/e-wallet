@@ -4,17 +4,29 @@
   "description": "A simple wallet system",
   "main": "index.js",
   "scripts": {
-    "start": "echo \"Error: no test specified\" && exit 1",
-    "dev": "echo \"Error: no test specified\" && exit 1",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts",
+    "prebuild": "npm install - typescript",
+    "build": "rm -rf dist && tsc",
+    "test": "jest --verbose"
   },
   "keywords": [],
   "author": "Iyanu Akins",
   "license": "ISC",
   "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/morgan": "^1.9.9",
     "@types/node": "^20.12.12",
     "prisma": "^5.14.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "-": "^0.0.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.2.0",
+    "morgan": "^1.10.0",
+    "winston": "^3.13.0"
   }
 }
