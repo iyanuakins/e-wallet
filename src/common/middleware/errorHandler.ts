@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import ENV from "../config/envConfig";
+import ENV from "../config/env";
 import Logger from "../config/logger";
 
 const ErrorHandler = (

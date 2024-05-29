@@ -9,24 +9,19 @@ datasource db {
 
 model Wallet {
   id        Int       @id @default(autoincrement())
-  walletId  String    @db.VarChar(15) @unique
-  balance   String    @db.VarChar(10) @default(0)
+  walletId  String    @unique
+  balance   Decimal    @default(0.00)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
 
-enum TransactionType {
-  CREDIT
-  DEBIT
-}
-
 model Transaction {
-  id                Int               @id @default(autoincrement())
-  walletId          String            @db.VarChar(15)
-  reference         String            @db.VarChar(64)
-  amount            String            @db.VarChar(10) @default(0)
-  balanceBefore     String            @db.VarChar(10) @default(0)
-  balanceAfter      String            @db.VarChar(10) @default(0)
-  type              TransactionType   @default(DEBIT)
-  createdAt         DateTime          @default(now())
+  id                Int       @id @default(autoincrement())
+  walletId          String    
+  reference         String    
+  amount            Decimal   @default(0.00)
+  balanceBefore     Decimal   @default(0.00)
+  balanceAfter      Decimal   @default(0.00)
+  type              String
+  createdAt         DateTime  @default(now())
 }

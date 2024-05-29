@@ -1,5 +1,5 @@
 import winston = require("winston");
-import ENV from "./envConfig";
+import ENV from "./env";
 
 const Logger = winston.createLogger({
   defaultMeta: { service: "e-wallet-service" },
