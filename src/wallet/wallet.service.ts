@@ -82,8 +82,8 @@ export default class WalletService {
 
       return { walletId, balance };
     } catch (error: any) {
-      Logger.error("Error occurred while creating wallet: ", error);
-      if (typeof error == typeof HttpException) {
+      Logger.error("Error occurred during balance enquiry: ", error);
+      if (error?.statusCode) {
         throw error;
       }
 
@@ -116,8 +116,11 @@ export default class WalletService {
 
       return { walletId, history };
     } catch (error: any) {
-      Logger.error("Error occurred while creating wallet: ", error);
-      if (typeof error == typeof HttpException) {
+      Logger.error(
+        "Error occurred while fetching transaction history: ",
+        error
+      );
+      if (error?.statusCode) {
         throw error;
       }
 

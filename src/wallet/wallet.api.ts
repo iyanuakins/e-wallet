@@ -33,7 +33,7 @@ router.get(
 
       return SuccessResponse(
         response,
-        HttpStatus.CREATED,
+        HttpStatus.OK,
         "Wallet balance queried successfully",
         wallet
       );
@@ -52,8 +52,8 @@ router.get(
 
       return SuccessResponse(
         response,
-        HttpStatus.CREATED,
-        "Wallet transaction history returned successfully",
+        HttpStatus.OK,
+        "Wallet transaction history fetched successfully",
         history
       );
     } catch (error) {
