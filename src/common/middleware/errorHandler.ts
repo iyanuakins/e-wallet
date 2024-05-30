@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import ENV from "../config/env";
 import Logger from "../config/logger";
-import { HttpExceptionName } from "../utils/exceptions";
-import { HttpStatus } from "../utils/reponses";
+import { HttpExceptionName } from "../util/exceptions";
+import { HttpStatus } from "../util/reponses";
 
 const ErrorHandler = (
   error: { statusCode: number; message: string; stack: any; name?: string },

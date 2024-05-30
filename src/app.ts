@@ -5,8 +5,8 @@ import rateLimiter from "./common/middleware/rateLimiter";
 import requestLogger from "./common/middleware/requestLogger";
 import prisma from "./common/config/prisma";
 import v1Routes from "./routes/routes.v1";
-import HttpException, { HttpExceptionName } from "./common/utils/exceptions";
-import { HttpStatus } from "./common/utils/reponses";
+import HttpException, { HttpExceptionName } from "./common/util/exceptions";
+import { HttpStatus } from "./common/util/reponses";
 
 const app: Express = express();
 app.disable("x-powered-by");

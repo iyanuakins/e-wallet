@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { HttpStatus, SuccessResponse } from "../common/utils/reponses";
+import { HttpStatus, SuccessResponse } from "../common/util/reponses";
 import WalletService from "./wallet.service";
 import { TransactionType } from "./wallet.types";
 

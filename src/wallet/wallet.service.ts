@@ -2,9 +2,9 @@ import prisma from "./../common/config/prisma";
 import Logger from "./../common/config/logger";
 import { Prisma } from "@prisma/client";
 import { Mutex, MutexInterface, withTimeout } from "async-mutex";
-import { cleanAmount } from "../common/utils/helpers";
-import HttpException, { HttpExceptionName } from "../common/utils/exceptions";
-import { HttpStatus } from "../common/utils/reponses";
+import { cleanAmount } from "../common/util/helpers";
+import HttpException, { HttpExceptionName } from "../common/util/exceptions";
+import { HttpStatus } from "../common/util/reponses";
 import { validatewalletTransactionPayload } from "./wallet.validator";
 import {
   IWalletTransaction,
@@ -14,7 +14,6 @@ import {
   ResponseCode,
   ResponseMessage,
 } from "./wallet.types";
-import { stringify } from "querystring";
 
 export default class WalletService {
   private mutexWithTimeout: MutexInterface | undefined;
