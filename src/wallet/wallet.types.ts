@@ -23,13 +23,13 @@ export enum TransactionType {
   CREDIT = "CREDIT",
 }
 
-export enum responseCode {
+export enum ResponseCode {
   SUCCESS = "00",
   INSUFFICIENT_BALANCE = "02",
   FAILED = "01",
 }
 
-export enum responseMessage {
+export enum ResponseMessage {
   SUCCESS = "Transaction successful",
   INSUFFICIENT_BALANCE = "Insufficient balance",
   FAILED = "Transaction fialed, try again later",

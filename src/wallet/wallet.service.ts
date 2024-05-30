@@ -11,16 +11,17 @@ import {
   IWalletTransactionResponse,
   TransactionType,
   constant,
-  responseCode,
-  responseMessage,
+  ResponseCode,
+  ResponseMessage,
 } from "./wallet.types";
+import { stringify } from "querystring";
 
 export default class WalletService {
   private mutexWithTimeout: MutexInterface | undefined;
   constructor() {
     this.mutexWithTimeout = withTimeout(
       new Mutex(),
-      1000,
+      1500,
       new Error("Mutex timed out.")
     );
   }
@@ -67,9 +68,9 @@ export default class WalletService {
       });
 
       if (!wallet) {
-        Logger.info(`Wallet not found: ${walletId}`);
+        Logger.info(`Balance enquiry wallet not found: ${walletId}`);
         throw new HttpException(
-          "Balance enquiry wallet not found",
+          "Wallet not found",
           HttpStatus.NOT_FOUND,
           HttpExceptionName.NOT_FOUND
         );
@@ -137,15 +138,16 @@ export default class WalletService {
     const walletCount = await prisma.wallet.count({
       where: { walletId },
     });
+
     if (walletCount < 1) {
-      Logger.info(`Wallet not found: ${walletId}`);
+      Logger.info(`Transaction processing wallet not found: ${walletId}`);
       throw new HttpException(
-        "Transaction processing wallet not found",
+        "Wallet not found",
         HttpStatus.NOT_FOUND,
         HttpExceptionName.NOT_FOUND
       );
     }
-    
+
     const isCreditTransaction = type === TransactionType.CREDIT;
     const sourceWallet = isCreditTransaction
       ? constant.adminWalletId
@@ -171,24 +173,21 @@ export default class WalletService {
         },
       });
 
-      const sourceBalanceBefore = cleanAmount(+cleanedAmount + source.balance);
+      const sourceBalanceBefore = cleanAmount(
+        +cleanedAmount + +cleanAmount(source.balance)
+      );
 
       if (source.balance < 0) {
         Logger.info(
           `Insufficient balance in source wallet: ${sourceWallet}, amount: ${cleanedAmount}, balance: ${sourceBalanceBefore}`
         );
         if (!isCreditTransaction) {
-          return {
-            responseCode: responseCode.INSUFFICIENT_BALANCE,
-            responseMessage: responseMessage.INSUFFICIENT_BALANCE,
-            transaction: payload,
-          };
+          return Promise.reject({
+            responseCode: ResponseCode.INSUFFICIENT_BALANCE,
+          });
         }
-        return {
-          responseCode: responseCode.FAILED,
-          responseMessage: responseMessage.FAILED,
-          transaction: payload,
-        };
+
+        throw new Error(ResponseMessage.INSUFFICIENT_BALANCE);
       }
 
       Logger.info(
@@ -201,7 +200,7 @@ export default class WalletService {
           walletId: sourceWallet,
           amount: +cleanedAmount,
           balanceBefore: +sourceBalanceBefore,
-          balanceAfter: source.balance,
+          balanceAfter: +cleanAmount(source.balance),
           reference: `${reference}-01`,
           type: "DEBIT",
         },
@@ -222,30 +221,30 @@ export default class WalletService {
         `${cleanedAmount} credited to destination wallet:${sourceWallet}`
       );
       const destinationBalanceBefore = cleanAmount(
-        destination.balance - +cleanedAmount
+        +cleanAmount(destination.balance) - +cleanedAmount
       );
 
       transactionInputs.push({
         walletId: destinationWallet,
         amount: +cleanedAmount,
         balanceBefore: +destinationBalanceBefore,
-        balanceAfter: destination.balance,
+        balanceAfter: +cleanAmount(destination.balance),
         reference: `${reference}-02`,
         type: "CREDIT",
       });
 
       const [debiTransactions, creditTransaction] =
-        (await trx.transaction.createManyAndReturn({
+        await trx.transaction.createManyAndReturn({
           data: transactionInputs,
-        })) || [{}, {}];
+        });
       Logger.info(
         `Completed transfer of ${cleanedAmount} from ${sourceWallet} to ${destinationWallet}
         ${JSON.stringify({ debiTransactions, creditTransaction })}`
       );
 
       return {
-        responseCode: responseCode.SUCCESS,
-        responseMessage: responseMessage.SUCCESS,
+        responseCode: ResponseCode.SUCCESS,
+        responseMessage: ResponseMessage.SUCCESS,
         transaction: isCreditTransaction ? creditTransaction : debiTransactions,
       };
     };
@@ -256,14 +255,16 @@ export default class WalletService {
       );
     } catch (error: any) {
       Logger.error("Error occurred while processing transaction: ", error);
-      console.log(typeof error as string);
-      if (typeof error == typeof HttpException) {
-        throw error;
+      if (error?.responseCode) {
+        return {
+          responseCode: ResponseCode.INSUFFICIENT_BALANCE,
+          responseMessage: ResponseMessage.INSUFFICIENT_BALANCE,
+          transaction: payload,
+        };
       }
-
       return {
-        responseCode: responseCode.FAILED,
-        responseMessage: responseMessage.FAILED,
+        responseCode: ResponseCode.FAILED,
+        responseMessage: ResponseMessage.FAILED,
         transaction: payload,
       };
     }
