@@ -6,6 +6,12 @@ interface ErrorInterface {
   message: string;
 }
 
+export enum HttpExceptionName {
+  BAD_REQUEST = "BadRequestException",
+  NOT_FOUND = "NotFoundException",
+  INTERNAL_SERVER_ERROR = "InternalServerErrorException",
+}
+
 class BaseException extends Error implements ErrorInterface {
   statusCode: number;
   constructor(message: string) {
@@ -19,9 +25,9 @@ class BaseException extends Error implements ErrorInterface {
 
 export default class HttpException extends BaseException {
   statusCode: number;
-  constructor(message: string, statusCode: HttpStatus) {
+  constructor(message: string, statusCode: HttpStatus, name: string = "") {
     super(message);
-    this.name = HttpException.name;
+    this.name = name || HttpException.name;
     this.statusCode = statusCode;
   }
 }

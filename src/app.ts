@@ -5,12 +5,16 @@ import rateLimiter from "./common/middleware/rateLimiter";
 import requestLogger from "./common/middleware/requestLogger";
 import prisma from "./common/config/prisma";
 import v1Routes from "./routes/routes.v1";
+import HttpException, { HttpExceptionName } from "./common/utils/exceptions";
+import { HttpStatus } from "./common/utils/reponses";
 
 const app: Express = express();
 app.disable("x-powered-by");
 
 app.use(rateLimiter);
 app.use(requestLogger);
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 // connect to DB.
 (async () => {
@@ -20,7 +24,15 @@ app.use(requestLogger);
 })();
 
 app.use("/api/v1", v1Routes);
-
+app.use((request: Request, response: Response, next: NextFunction) => {
+  next(
+    new HttpException(
+      "Route not found",
+      HttpStatus.NOT_FOUND,
+      HttpExceptionName.NOT_FOUND
+    )
+  );
+});
 app.use(errorHandler);
 
 export default app;

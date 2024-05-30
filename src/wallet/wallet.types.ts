@@ -32,9 +32,9 @@ export enum responseCode {
 export enum responseMessage {
   SUCCESS = "Transaction successful",
   INSUFFICIENT_BALANCE = "Insufficient balance",
-  FAILED = "Transaction fialed",
+  FAILED = "Transaction fialed, try again later",
 }
 
 export const constant: Record<string, any> = {
-  adminWalletId: "2340000000000",
+  adminWalletId: "1000000000",
 };

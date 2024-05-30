@@ -24,6 +24,44 @@ router.get(
   }
 );
 
+router.get(
+  "/balance/:walletId",
+  async ({ params }: Request, response: Response, next: NextFunction) => {
+    try {
+      const { walletId } = params;
+      const wallet = await service.getBalance(walletId);
+
+      return SuccessResponse(
+        response,
+        HttpStatus.CREATED,
+        "Wallet balance queried successfully",
+        wallet
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get(
+  "/history/:walletId",
+  async ({ params }: Request, response: Response, next: NextFunction) => {
+    try {
+      const { walletId } = params;
+      const history = await service.getHistory(walletId);
+
+      return SuccessResponse(
+        response,
+        HttpStatus.CREATED,
+        "Wallet transaction history returned successfully",
+        history
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 router.post(
   "/debit",
   async ({ body }: Request, response: Response, next: NextFunction) => {

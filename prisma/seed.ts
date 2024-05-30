@@ -6,14 +6,14 @@ const prisma = new PrismaClient({ errorFormat: "pretty" });
 const main = async () => {
   try {
     const walletCount = await prisma.wallet.count({
-      where: { walletId: "2340000000000" },
+      where: { walletId: "1000000000" },
     });
     if (walletCount > 0) return;
 
     Logger.info("Seeding admin wallet..,");
     const data: Prisma.WalletCreateInput = {
-      walletId: "2340000000000",
-      balance: new Prisma.Decimal(10000000).clamp(2, 2),
+      walletId: "1000000000",
+      balance: 99999999.99,
     };
     await prisma.wallet.create({ data });
   } catch (error) {
