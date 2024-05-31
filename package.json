@@ -4,11 +4,12 @@
   "description": "A simple wallet system",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/src/index.js",
+    "start": "npm run prisma && node dist/src/index.js",
     "dev": "nodemon src/index.ts",
     "prebuild": "npm install",
     "build": "npm run prebuild && rm -rf dist && tsc",
-    "test": "jest --verbose"
+    "test": "jest --verbose",
+    "prisma": "npx prisma db push && npx tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "Iyanu Akins",
@@ -32,8 +33,5 @@
     "joi": "^17.13.1",
     "morgan": "^1.10.0",
     "winston": "^3.13.0"
-  },
-  "prisma": {
-    "seed": "ts-node prisma/seed.ts"
   }
 }

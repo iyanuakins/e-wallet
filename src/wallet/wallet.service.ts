@@ -66,7 +66,7 @@ export default class WalletService {
         where: { walletId },
       });
 
-      if (!wallet) {
+      if (!wallet || walletId == constant.adminWalletId) {
         Logger.info(`Balance enquiry wallet not found: ${walletId}`);
         throw new HttpException(
           "Wallet not found",
@@ -100,7 +100,7 @@ export default class WalletService {
         where: { walletId },
       });
 
-      if (!wallet) {
+      if (!wallet || walletId == constant.adminWalletId) {
         Logger.info(`Transaction history wallet not found: ${walletId}`);
         throw new HttpException(
           "Wallet not found",
