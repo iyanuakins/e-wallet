@@ -141,7 +141,7 @@ export default class WalletService {
       where: { walletId },
     });
 
-    if (walletCount < 1) {
+    if (walletCount < 1 || walletId == constant.adminWalletId) {
       Logger.info(`Transaction processing wallet not found: ${walletId}`);
       throw new HttpException(
         "Wallet not found",

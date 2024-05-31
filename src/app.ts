@@ -23,6 +23,11 @@ app.use(express.json());
   Logger.info("Connected to DB");
 })();
 
+app.use(
+  "/health-check",
+  (request: Request, response: Response, next: NextFunction) =>
+    response.status(HttpStatus.OK).json({ alive: true })
+);
 app.use("/api/v1", v1Routes);
 app.use((request: Request, response: Response, next: NextFunction) => {
   next(

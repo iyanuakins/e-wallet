@@ -4,10 +4,10 @@
   "description": "A simple wallet system",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "node dist/src/index.js",
     "dev": "nodemon src/index.ts",
     "prebuild": "npm install - typescript",
-    "build": "rm -rf dist && tsc",
+    "build": "npm run prebuild && rm -rf dist && tsc",
     "test": "jest --verbose"
   },
   "keywords": [],
