@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/src/index.js",
     "dev": "nodemon src/index.ts",
-    "prebuild": "npm install - typescript",
+    "prebuild": "npm install",
     "build": "npm run prebuild && rm -rf dist && tsc",
     "test": "jest --verbose"
   },
